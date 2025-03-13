@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -9,7 +10,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Map<Integer, Post> posts = new HashMap<>();
+        Map<Integer, Post> posts = new LinkedHashMap<>();
         int autoIncrement = 1;
 
         while(true){
@@ -83,6 +84,14 @@ public class Main {
                     String content = sc.nextLine();
                     posts.get(seq).update(title, content);
                     System.out.println(seq + "번 게시물이 성공적으로 수정되었습니다!");
+                    System.out.println();
+                }
+                continue;
+            }
+            if (command.equals("목록")) {
+                System.out.println("총 게시글은 " + posts.size() + "개 작성되어있습니다.");
+                for (int seq : posts.keySet()) {
+                    System.out.println(posts.get(seq));
                     System.out.println();
                 }
                 continue;
