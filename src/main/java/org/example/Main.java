@@ -1,9 +1,9 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.example.view.Input;
+import org.example.view.Output;
+
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -15,20 +15,16 @@ public class Main {
 
         while(true){
             // 명령어 입력
-            System.out.print("명령어 > ");
-            String command = sc.nextLine();
+            String command = Input.command();
 
             // 명령어 로직 수행
             if(command.equals("종료")) {
-                System.out.println("프로그램이 종료됩니다.");
+                Output.exit();
                 break;
             }
             if(command.equals("작성")) {
-                System.out.print("제목 : ");
-                String title = sc.nextLine();
-                System.out.print("내용 : ");
-                String content = sc.nextLine();
-                System.out.println();
+                String title = Input.createPostTitle();
+                String content = Input.createPostContent();
 
                 posts.put(autoIncrement, new Post(autoIncrement, title, content));
                 autoIncrement++;
@@ -36,67 +32,49 @@ public class Main {
             }
             if(command.equals("조회")) {
                 // 입력
-                System.out.print("어떤 게시물을 조회할까요?");
-                String input = sc.nextLine();
-                System.out.println();
-                int seq = Integer.parseInt(input.substring(0, input.length()-1));
+                int seq = Input.readPost();
 
                 if(!posts.containsKey(seq)) {
-                    System.out.println(seq + "번 게시글은 존재하지 않습니다.");
-                    System.out.println();
+                    Output.notExistsPost(seq);
                 } else {
-                    System.out.println(posts.get(seq));
-                    System.out.println();
+                    Output.readPost(posts.get(seq));
                 }
                 continue;
             }
             if(command.equals("삭제")) {
                 // 입력
-                System.out.print("어떤 게시물을 삭제할까요?");
-                String input = sc.nextLine();
-                System.out.println();
-                int seq = Integer.parseInt(input.substring(0, input.length()-1));
+                int seq = Input.deletePost();
 
                 if(!posts.containsKey(seq)) {
-                    System.out.println(seq + "번 게시글은 존재하지 않습니다.");
-                    System.out.println();
+                    Output.notExistsPost(seq);
                 } else {
                     posts.remove(seq);
-                    System.out.println(seq+ "번 게시물이 성공적으로 삭제되었습니다!");
-                    System.out.println();
+                    Output.deletePost(seq);
                 }
                 continue;
             }
             if (command.equals("수정")) {
                 // 입력
-                System.out.print("어떤 게시물을 수정할까요?");
-                String input = sc.nextLine();
-                System.out.println();
-                int seq = Integer.parseInt(input.substring(0, input.length()-1));
+                int seq = Input.updatePost();
 
                 if(!posts.containsKey(seq)) {
-                    System.out.println(seq + "번 게시글은 존재하지 않습니다.");
-                    System.out.println();
+                    Output.notExistsPost(seq);
                 } else {
-                    System.out.print("수정할 제목 : ");
-                    String title = sc.nextLine();
-                    System.out.print("수정할 내용 : ");
-                    String content = sc.nextLine();
+                    String title = Input.updatePostTitle();
+                    String content = Input.updatePostContent();
                     posts.get(seq).update(title, content);
-                    System.out.println(seq + "번 게시물이 성공적으로 수정되었습니다!");
-                    System.out.println();
+                    Output.updatePost(seq);
                 }
                 continue;
             }
             if (command.equals("목록")) {
-                System.out.println("총 게시글은 " + posts.size() + "개 작성되어있습니다.");
+                Output.indexPost(posts.size());
                 for (int seq : posts.keySet()) {
-                    System.out.println(posts.get(seq));
-                    System.out.println();
+                    Output.readPost(posts.get(seq));
                 }
                 continue;
             }
-            System.out.println("존재하지 않는 명령어 입니다.");
+            Output.notExistsCommand();
         }
     }
 }
